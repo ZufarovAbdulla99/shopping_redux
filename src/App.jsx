@@ -1,6 +1,6 @@
 import { useState, useReducer } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart, deleteFromCart } from "./store/productsSlice";
+import { addToCart, deleteFromCart, updateProductQuantity } from "./store/productsSlice";
 
 // Mahsulotlar ro'yxati
 const initialProducts = [
@@ -70,7 +70,7 @@ function App() {
   const cart = useSelector(state => state.products.products)
   const dispatch = useDispatch()
   
-  console.log(cart)
+  // console.log(cart)
 
   // const addToCart = (product) => {
   //   dispatch({ type: "ADD_TO_CART", payload: product });
@@ -80,14 +80,14 @@ function App() {
     dispatch({ type: "REMOVE_FROM_CART", payload: productId });
   };
 
-  const updateQuantity = (productId, quantity) => {
-    if (quantity > 0) {
-      dispatch({
-        type: "UPDATE_QUANTITY",
-        payload: { id: productId, quantity },
-      });
-    }
-  };
+  // const updateQuantity = (productId, quantity) => {
+  //   if (quantity > 0) {
+  //     dispatch({
+  //       type: "UPDATE_QUANTITY",
+  //       payload: { id: productId, quantity },
+  //     });
+  //   }
+  // };
 
   const calculateTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -153,14 +153,16 @@ function App() {
                   </div>
                   <div className="flex items-center">
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      // onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                      onClick={() => dispatch(updateProductQuantity({id: item.id, quantity: item.quantity - 1}))}
                       className="bg-gray-200 px-2 py-1 rounded-l"
                     >
                       -
                     </button>
                     <span className="px-4">{item.quantity}</span>
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      // onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                      onClick={() => dispatch(updateProductQuantity({id: item.id, quantity: item.quantity + 1}))}
                       className="bg-gray-200 px-2 py-1 rounded-r"
                     >
                       +

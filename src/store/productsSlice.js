@@ -1,49 +1,47 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const productsSlice = createSlice({
-    name: "products",
-    initialState: {
-        products: []
+  name: "products",
+  initialState: {
+    products: [],
+  },
+  reducers: {
+    addToCart: (state, action) => {
+      const newProduct = action.payload;
+      state.products = [newProduct, ...state.products];
     },
-    reducers: {
-        addToCart: (state, action) => {
-            const newProduct = action.payload
-            state.products = [newProduct, ...state.products]
-        },
-        deleteFromCart: (state, action) => {
-            const id = action.payload
-            state.products = state.products.filter((product) => product.id !== id)
-        }
-    }
-})
+    deleteFromCart: (state, action) => {
+      const id = action.payload;
+      state.products = state.products.filter((product) => product.id !== id);
+    },
+    updateProductQuantity: (state, action) => {
+      // console.log(action.payload.id);
+      // console.log(action.payload.quantity);
 
-export const { addToCart, deleteFromCart } = productsSlice.actions
-export default productsSlice.reducer
+      // // other way 
+      // state.products = state.products.map((product) => {
+      //   if(product.id === action.payload.id){
+      //     return { ...product, quantity : action.payload.quantity }
+      //   }else {
+      //     return product
+      //   }
+      // })
+      if(action.payload.quantity > 0) {
+        state.products = state.products.map((product) => product.id === action.payload.id ? { ...product, quantity : action.payload.quantity } : product)
+      }
+    },
+  },
+});
 
-function cartReducer(state, action) {
-    switch (action.type) {
-      case "ADD_TO_CART":
-        const existingItem = state.find((item) => item.id === action.payload.id);
-        if (existingItem) {
-          return state.map((item) =>
-            item.id === action.payload.id
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          );
-        }
-        return [...state, { ...action.payload, quantity: 1 }];
-  
-      case "REMOVE_FROM_CART":
-        return state.filter((item) => item.id !== action.payload);
-  
-      case "UPDATE_QUANTITY":
-        return state.map((item) =>
-          item.id === action.payload.id
-            ? { ...item, quantity: action.payload.quantity }
-            : item
-        );
-  
-      default:
-        return state;
-    }
-  }
+export const { addToCart, deleteFromCart, updateProductQuantity } =
+  productsSlice.actions;
+export default productsSlice.reducer;
+
+// const updateQuantity = (productId, quantity) => {
+//   if (quantity > 0) {
+//     dispatch({
+//       type: "UPDATE_QUANTITY",
+//       payload: { id: productId, quantity },
+//     });
+//   }
+// };
